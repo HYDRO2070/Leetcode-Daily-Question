@@ -1,0 +1,21 @@
+class Solution {
+public:
+    vector<string> stringMatching(vector<string>& words) {
+        unordered_map<string,bool> count;
+        vector<string> ans;
+        const int n = words.size();
+        for(int i = 0;i < n;i++){
+            for(int j = 0;j < n;j++){
+                if(i == j) continue;
+                if((words[i].find(words[j])) < words[i].size()){
+                    if(!count.count(words[j])){
+                    count[words[j]] = true;
+                    ans.push_back(words[j]);
+
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+};
