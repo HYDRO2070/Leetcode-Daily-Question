@@ -1,0 +1,18 @@
+class Solution {
+public:
+    int prefixCount(vector<string>& words, string p) {
+        int ans = 0;
+        // int n = p.size();
+        for(string s : words){
+            // if(s.size() < n) continue;
+            // int i;
+            // for(i = 0;i < n;i++){
+            //     if(s[i] != p[i]) break;
+            // }
+            // if(i == n)
+            // ans++;
+            if(s.starts_with(p)) ans++;
+        }
+        return ans;
+    }
+};
