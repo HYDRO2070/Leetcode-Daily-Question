@@ -1,0 +1,15 @@
+class Solution {
+public:
+    bool canConstruct(string s, int k) {
+        if(s.length() < k) return false;
+        vector<int> c(26,0);
+        for(auto& ch : s){
+            c[ch-'a']++;
+        }
+        int cnt = 0;
+        for(auto& n : c){
+            if(n&1) cnt++;
+        }
+        return (cnt <= k);
+    }
+};
