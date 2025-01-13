@@ -1,0 +1,16 @@
+class Solution {
+public:
+    int minimumLength(string &s) {
+        vector<int> freq(26,0);
+        int ans = 0;
+        for(char& c : s) freq[c - 'a']++;
+        
+        for(int& num : freq){
+            while(num >= 3){
+                num -= 2;
+            }
+            ans += num;
+        }
+        return ans;
+    }
+};
