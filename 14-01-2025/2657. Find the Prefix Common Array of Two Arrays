@@ -1,0 +1,20 @@
+class Solution {
+public:
+    vector<int> findThePrefixCommonArray(vector<int>& A, vector<int>& B) {
+        const int n = A.size();
+        vector<bool> m(51, false);
+        m[A[0]] = true;
+        m[B[0]] = true;
+        if(A[0] == B[0]) A[0] = 1;
+        else A[0] = 0;
+        for(int i = 1;i < n;i++){
+            int temp = A[i-1];
+            if(!m[A[i]]) m[A[i]] = 1;
+            else temp++;
+            if(!m[B[i]]) m[B[i]] = 1;
+            else temp++;
+            A[i] = temp;
+        }
+        return A;
+    }
+};
