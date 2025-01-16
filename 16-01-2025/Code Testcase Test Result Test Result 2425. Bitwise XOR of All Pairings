@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int xorAllNums(vector<int>& nums1, vector<int>& nums2) {
+        unordered_map<int, bool> mp;
+        int ans = 0;
+
+        for (int& num : nums1){
+            mp[num] = !mp[num];
+        }
+        for (auto& num : mp) {
+            if (num.second) {
+                for(auto& nm : nums2){
+                    ans ^= (num.first ^ nm);
+                }
+            }
+        }
+        return ans;
+    }
+};
