@@ -1,0 +1,19 @@
+class Solution {
+public:
+    bool doesValidArrayExist(vector<int>& d) {
+        if (d.size() == 1) {
+            if (d[0] == 1)
+                return false;
+            else
+                return true;
+        }
+
+        char temp = '0' + d[d.size() - 1];
+
+        for (int i = d.size() - 2; i >= 0; i--) {
+
+            temp = '0' + ((temp - '0') ^ d[i]);
+        }
+        return ((temp - '0') ^ d[d.size() - 1]) == d[d.size() - 1];
+    }
+};
