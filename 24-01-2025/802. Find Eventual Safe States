@@ -1,0 +1,29 @@
+class Solution {
+    private:
+    bool solve(vector<vector<int>>& graph,int index,vector<int> &visit,vector<int> &dp){
+        if(dp[index] != -1) return dp[index];
+        if(visit[index]) return false;
+
+        visit[index] = true;
+
+        for(auto& num : graph[index]){
+            if(!solve(graph,num,visit,dp)) return dp[index] = false;
+        }
+
+        return dp[index] = true;
+    }
+
+
+public:
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        int n = graph.size();
+        vector<int> ans;
+        vector<int> dp(n,-1);
+        vector<int> visit(n,false);
+        for(int i = 0;i < n;i++){  
+            if(dp[i] == 1 || solve(graph,i,visit,dp)) ans.push_back(i);
+        }
+        return ans;
+
+    }
+};
