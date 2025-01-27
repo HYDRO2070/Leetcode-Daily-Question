@@ -1,0 +1,30 @@
+class Solution {
+public:
+    vector<bool> checkIfPrerequisite(const int &n,
+                                     vector<vector<int>>& p,
+                                     vector<vector<int>>& q) {
+        vector<bool> ans;
+        vector<vector<bool>> temp(
+            n, vector<bool>(n, false));
+
+        for (const auto& d : p) {
+            temp[d[0]][d[1]] = true;
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int src = 0; src < n; src++) {
+                for (int target = 0; target < n; target++) {
+                    temp[src][target] =
+                        temp[src][target] ||
+                        (temp[src][i] && temp[i][target]);
+                }
+            }
+        }
+
+        for (const auto& d : q) {
+            ans.push_back(temp[d[0]][d[1]]);
+        }
+
+        return ans;
+    }
+};
