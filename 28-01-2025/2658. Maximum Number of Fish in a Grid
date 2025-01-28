@@ -1,0 +1,34 @@
+class Solution {
+private:
+    int solve(vector<vector<int>>& grid, int i,
+              int j) {
+        if (i >= grid.size() || j >= grid[0].size() || i < 0 || j < 0 ||
+            grid[i][j] == 0 || grid[i][j] == -1)
+            return 0;
+
+        int ans = grid[i][j];
+        grid[i][j] = -1;
+        constexpr int index[4][2] = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
+        for(auto& in : index)
+            ans += solve(grid, i + in[0], j + in[1]);
+
+        return ans;
+    }
+
+public:
+    int findMaxFish(vector<vector<int>>& grid) {
+
+        const int n = grid.size();
+        const int m = grid[0].size();
+        int ans = 0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 0 || grid[i][j] == -1)
+                    continue;
+                ans = max(ans, solve(grid, i, j));
+            }
+        }
+        return ans;
+    }
+};
