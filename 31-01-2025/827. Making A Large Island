@@ -1,0 +1,84 @@
+class Solution {
+public:
+    bool inboundary(int gridSize, vector<int>& gridColSize, int row, int col) {
+        return !(row >= gridSize || row < 0 || col < 0 ||
+                 col >= gridColSize[row]);
+    }
+
+    bool SeenCheck(vector<int>& seen, int areaidx) {
+        return find(seen.begin(), seen.end(), areaidx) == seen.end();
+    }
+
+    void dfs(vector<vector<int>>& grid, int gridSize, vector<int>& gridColSize,
+             int row, int col, vector<int>& area, int idx) {
+        if (!inboundary(gridSize, gridColSize, row, col) ||
+            grid[row][col] == 0) {
+            return;
+        }
+        if (grid[row][col] == 1) {
+            area[idx]++;
+            grid[row][col] = idx;
+            dfs(grid, gridSize, gridColSize, row - 1, col, area, idx);
+            dfs(grid, gridSize, gridColSize, row + 1, col, area, idx);
+            dfs(grid, gridSize, gridColSize, row, col - 1, area, idx);
+            dfs(grid, gridSize, gridColSize, row, col + 1, area, idx);
+        }
+    }
+
+    int largestIsland(vector<vector<int>>& grid) {
+        int gridSize = grid.size();
+        vector<int> gridColSize(gridSize);
+        for (int i = 0; i < gridSize; i++) {
+            gridColSize[i] = grid[i].size();
+        }
+
+        vector<int> area(125003, 0);
+        int idx = 2, ans = 0;
+
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridColSize[i]; j++) {
+                if (grid[i][j] == 1) {
+                    dfs(grid, gridSize, gridColSize, i, j, area, idx);
+                    ans = max(ans, area[idx]);
+                    idx++;
+                }
+            }
+        }
+
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridColSize[i]; j++) {
+                if (grid[i][j] == 0) {
+                    int temp = 0;
+                    vector<int> seen;
+
+                    if (inboundary(gridSize, gridColSize, i - 1, j) &&
+                        grid[i - 1][j] != 0 &&
+                        SeenCheck(seen, grid[i - 1][j])) {
+                        temp += area[grid[i - 1][j]];
+                        seen.push_back(grid[i - 1][j]);
+                    }
+                    if (inboundary(gridSize, gridColSize, i + 1, j) &&
+                        grid[i + 1][j] != 0 &&
+                        SeenCheck(seen, grid[i + 1][j])) {
+                        temp += area[grid[i + 1][j]];
+                        seen.push_back(grid[i + 1][j]);
+                    }
+                    if (inboundary(gridSize, gridColSize, i, j + 1) &&
+                        grid[i][j + 1] != 0 &&
+                        SeenCheck(seen, grid[i][j + 1])) {
+                        temp += area[grid[i][j + 1]];
+                        seen.push_back(grid[i][j + 1]);
+                    }
+                    if (inboundary(gridSize, gridColSize, i, j - 1) &&
+                        grid[i][j - 1] != 0 &&
+                        SeenCheck(seen, grid[i][j - 1])) {
+                        temp += area[grid[i][j - 1]];
+                        seen.push_back(grid[i][j - 1]);
+                    }
+                    ans = max(ans, temp + 1);
+                }
+            }
+        }
+        return ans;
+    }
+};
