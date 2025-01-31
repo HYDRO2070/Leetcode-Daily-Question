@@ -1,0 +1,103 @@
+class Solution {
+private:
+    bool isBipartite(const vector<vector<int>>& adj, vector<int>& color,
+                     int start) {
+        queue<int> q;
+        q.push(start);
+        color[start] = 0;
+
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+
+            for (int neighbor : adj[node]) {
+                if (color[neighbor] == -1) {
+                    color[neighbor] = 1 - color[node];
+                    q.push(neighbor);
+                } else if (color[neighbor] == color[node]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    int findMaxLevels(const vector<vector<int>>& adj, vector<bool>& visited,
+                      int start) {
+        vector<int> component;
+        queue<int> q;
+        q.push(start);
+        visited[start] = true;
+
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            component.push_back(node);
+
+            for (int neighbor : adj[node]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.push(neighbor);
+                }
+            }
+        }
+
+        int bestLevels = 0;
+        for (int node : component) {
+            bestLevels = max(bestLevels, bfsLevels(adj, node));
+        }
+
+        return bestLevels;
+    }
+
+    int bfsLevels(const vector<vector<int>>& adj, int start) {
+        queue<int> q;
+        unordered_map<int, int> dist;
+        q.push(start);
+        dist[start] = 1;
+
+        int maxLevel = 1;
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+
+            for (int neighbor : adj[node]) {
+                if (dist.find(neighbor) == dist.end()) {
+                    dist[neighbor] = dist[node] + 1;
+                    maxLevel = max(maxLevel, dist[neighbor]);
+                    q.push(neighbor);
+                }
+            }
+        }
+
+        return maxLevel;
+    }
+
+public:
+    int magnificentSets(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> adj(n + 1);
+        for (const auto& edge : edges) {
+            adj[edge[0]].push_back(edge[1]);
+            adj[edge[1]].push_back(edge[0]);
+        }
+
+        vector<int> color(n + 1, -1);
+        for (int i = 1; i <= n; ++i) {
+            if (color[i] == -1) {
+                if (!isBipartite(adj, color, i)) {
+                    return -1;
+                }
+            }
+        }
+        int totalGroups = 0;
+        vector<bool> visited(n + 1, false);
+
+        for (int i = 1; i <= n; ++i) {
+            if (!visited[i]) {
+                totalGroups += findMaxLevels(adj, visited, i);
+            }
+        }
+
+        return totalGroups;
+    }
+};
